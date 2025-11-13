@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { TariffDefinitionsTable } from "@/components/tariff-definitions-table"
-import { getApiUrl } from "@/lib/apiConfig"
 import { 
   Database, 
   Globe, 
@@ -38,7 +37,7 @@ export function AdminDashboard() {
         const { data: { session } } = await supabase.auth.getSession()
         const token = session?.access_token
 
-        const response = await fetch(getApiUrl("admin/dashboard/stats"), {
+        const response = await fetch("http://localhost:8080/api/admin/dashboard/stats", {
           headers: {
             "Authorization": token ? `Bearer ${token}` : "",
             "Content-Type": "application/json"
@@ -208,7 +207,7 @@ export function AdminDashboard() {
                 <Button 
                   variant="outline" 
                   className="h-auto py-4 flex flex-col items-center space-y-2"
-                  onClick={() => window.location.href = getApiUrl("tariff-definitions/export")}
+                  onClick={() => window.location.href = "http://localhost:8080/api/tariff-definitions/export"}
                 >
                   <FileText className="h-6 w-6 text-green-600" />
                   <div className="text-center">

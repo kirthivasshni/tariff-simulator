@@ -6,7 +6,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import supabase from "@/lib/supabaseClient"
-import { getApiUrl } from "@/lib/apiConfig"
 
 interface Currency {
   code: string
@@ -21,6 +20,7 @@ interface TariffCalculatorFormProps {
   tariffSource: "global" | "user"
 }
 
+const API_BASE_URL = "http://localhost:8080/api"
 const MINIMUM_QUANTITY = 0
 const QUANTITY_STEP = 0.01
 const INITIAL_QUANTITY = "1"
@@ -73,7 +73,7 @@ export function TariffCalculatorForm({ onCalculationComplete, tariffSource }: Ta
 
   const fetchDataWithAuth = async (endpoint: string): Promise<any> => {
     const token = await getAuthToken()
-    const response = await fetch(getApiUrl(endpoint.startsWith("/") ? endpoint.slice(1) : endpoint), {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: createAuthHeaders(token),
       credentials: 'include'
     })
@@ -143,7 +143,7 @@ export function TariffCalculatorForm({ onCalculationComplete, tariffSource }: Ta
   const loadCurrencies = async () => {
     try {
       const token = await getAuthToken()
-      const response = await fetch(getApiUrl("tariffs/currencies"), {
+      const response = await fetch(`${API_BASE_URL}/tariffs/currencies`, {
         headers: createAuthHeaders(token),
         credentials: "include",
       })
@@ -238,7 +238,7 @@ const FALLBACK_CURRENCIES: Currency[] = [
   const performCalculation = async (): Promise<any> => {
     const params = buildQueryParams()
     const token = await getAuthToken()
-    const response = await fetch(`${getApiUrl("tariff")}?${params}`, {
+    const response = await fetch(`${API_BASE_URL}/tariff?${params}`, {
       method: 'GET',
       headers: createAuthHeaders(token),
       credentials: 'include'
@@ -253,7 +253,7 @@ const FALLBACK_CURRENCIES: Currency[] = [
 
   const fetchLatestCalculationId = async (token: string): Promise<{ id: string; date: string } | null> => {
     try {
-      const historyResponse = await fetch(getApiUrl("tariff/history"), {
+      const historyResponse = await fetch(`${API_BASE_URL}/tariff/history`, {
         method: 'GET',
         headers: createAuthHeaders(token),
         credentials: 'include'
@@ -292,7 +292,7 @@ const FALLBACK_CURRENCIES: Currency[] = [
         },
       }
 
-      const response = await fetch(getApiUrl("tariff/history/save"), {
+      const response = await fetch(`${API_BASE_URL}/tariff/history/save`, {
         method: 'POST',
         headers: createAuthHeaders(token),
         credentials: 'include',

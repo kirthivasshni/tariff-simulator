@@ -27,7 +27,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Download, Plus, Trash2, Pencil } from "lucide-react"
-import { getApiUrl } from "@/lib/apiConfig"
 
 interface TariffDefinition {
   id: string
@@ -67,6 +66,7 @@ interface NewTariff {
   expirationDate: string
 }
 
+const API_BASE_URL = "http://localhost:8080/api"
 const TARIFF_TYPE_AHS = "AHS"
 const TARIFF_TYPE_MFN = "MFN"
 const FILTER_ALL_VALUE = "all"
@@ -120,7 +120,7 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
 
   const fetchDataWithAuth = async (endpoint: string): Promise<Response> => {
     const token = await getAuthToken()
-    return fetch(getApiUrl(endpoint.startsWith("/") ? endpoint.slice(1) : endpoint), {
+    return fetch(`${API_BASE_URL}${endpoint}`, {
       headers: createAuthHeaders(token),
       credentials: 'include'
     })
@@ -171,8 +171,8 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
       const token = await getAuthToken()
       const isUserTariff = simulatorMode || editingTariff.id.startsWith(USER_ID_PREFIX)
       const endpoint = isUserTariff
-        ? getApiUrl(`tariff-definitions/user/${editingTariff.id}`)
-        : getApiUrl(`tariff-definitions/modified/${editingTariff.id}`)
+        ? `${API_BASE_URL}/tariff-definitions/user/${editingTariff.id}`
+        : `${API_BASE_URL}/tariff-definitions/modified/${editingTariff.id}`
 
       const res = await fetch(endpoint, {
         method: "PUT",
@@ -332,9 +332,9 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
 
   const getAddTariffEndpoint = (): string => {
     if (!simulatorMode && isAdminRole()) {
-      return getApiUrl("tariff-definitions/modified")
+      return `${API_BASE_URL}/tariff-definitions/modified`
     }
-    return getApiUrl("tariff-definitions/user")
+    return `${API_BASE_URL}/tariff-definitions/user`
   }
 
   const addTariffToBackend = async (payload: any): Promise<TariffDefinitionsResponse> => {
@@ -357,7 +357,7 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
 
   const reloadUserTariffs = async () => {
     const token = await getAuthToken()
-    const userRes = await fetch(getApiUrl("tariff-definitions/user"), {
+    const userRes = await fetch(`${API_BASE_URL}/tariff-definitions/user`, {
       headers: createAuthHeaders(token),
       credentials: 'include'
     })
@@ -439,8 +439,8 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
   const deleteTariffFromBackend = async (id: string, isModifiedGlobal: boolean): Promise<Response> => {
     const token = await getAuthToken()
     const endpoint = isModifiedGlobal 
-      ? getApiUrl(`tariff-definitions/modified/${id}`)
-      : getApiUrl(`tariff-definitions/user/${id}`)
+      ? `${API_BASE_URL}/tariff-definitions/modified/${id}`
+      : `${API_BASE_URL}/tariff-definitions/user/${id}`
 
     return fetch(endpoint, {
       method: "DELETE",
@@ -451,7 +451,7 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
 
   const reloadModifiedTariffs = async () => {
     const token = await getAuthToken()
-    const modifiedRes = await fetch(getApiUrl("tariff-definitions/modified"), {
+    const modifiedRes = await fetch(`${API_BASE_URL}/tariff-definitions/modified`, {
       headers: createAuthHeaders(token),
       credentials: 'include'
     })
@@ -483,7 +483,7 @@ export function TariffDefinitionsTable({ userRole, simulatorMode = false }: Tari
   }
 
   const handleExportCSV = () => {
-    window.location.href = getApiUrl("tariff-definitions/export")
+    window.location.href = `${API_BASE_URL}/tariff-definitions/export`
   }
 
   const matchesProductFilter = (tariff: TariffDefinition): boolean => {

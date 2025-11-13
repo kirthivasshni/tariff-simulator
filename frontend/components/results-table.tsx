@@ -4,13 +4,13 @@ import { Badge } from "@/components/ui/badge"
 import { ShoppingCart } from "lucide-react"
 import { useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { getApiUrl } from "@/lib/apiConfig"
 
 interface ResultsTableProps {
   results: any
   onAddToCart: (calculation: any) => boolean | Promise<boolean>
 }
 
+const API_BASE_URL = "http://localhost:8080/api"
 const HTTP_STATUS_BAD_REQUEST = 400
 const HTTP_STATUS_NOT_FOUND = 404
 const SUCCESS_MESSAGE_DURATION = 3000
@@ -107,7 +107,7 @@ export function ResultsTable({ results, onAddToCart }: ResultsTableProps) {
   }
 
   const addToCartApi = async (calculationId: string, token: string): Promise<Response> => {
-    return await fetch(getApiUrl(`export-cart/add/${encodeURIComponent(calculationId)}`), {
+    return await fetch(`${API_BASE_URL}/export-cart/add/${encodeURIComponent(calculationId)}`, {
       method: 'POST',
       headers: createAuthHeaders(token),
       credentials: 'include'

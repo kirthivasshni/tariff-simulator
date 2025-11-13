@@ -16,12 +16,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LogOut, User, Shield } from "lucide-react"
 import { TariffTrendsVisualization } from "@/components/tariff-trends-visualization"
 import { TariffComparisonPanel } from "@/components/tariff-comparison-panel"
-import { API_BASE_URL, getApiUrl } from "@/lib/apiConfig"
 
 
 type AuthView = "login" | "signup"
 type DashboardView = "dashboard" | "global-tariffs" | "simulator-tariffs" | "cart" | "trade-insights" | "admin"
 
+const API_BASE_URL = "http://localhost:8080/api"
 const EMPTY_CART_STATUS = 204
 
 
@@ -52,7 +52,7 @@ export default function Home() {
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
 
-      const response = await fetch(getApiUrl("export-cart"), {
+      const response = await fetch(`${API_BASE_URL}/export-cart`, {
         method: 'GET',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',

@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ResultsTable } from "@/components/results-table"
 import supabase from "@/lib/supabaseClient"
-import { getApiUrl } from "@/lib/apiConfig"
 
 interface SimulatorCalculatorProps {
   onCartCountChange?: () => void
@@ -150,7 +149,7 @@ export function SimulatorCalculator({ onCartCountChange }: SimulatorCalculatorPr
           }
         }
 
-        const historyResponse = await fetch(getApiUrl('tariff/history/save'), {
+        const historyResponse = await fetch('http://localhost:8080/api/tariff/history/save', {
           method: 'POST',
           headers: {
             'Authorization': token ? `Bearer ${token}` : '',
@@ -169,7 +168,7 @@ export function SimulatorCalculator({ onCartCountChange }: SimulatorCalculatorPr
           const errorText = await historyResponse.text()
           console.error("❌ Failed to save to history:", historyResponse.status, errorText)
           // Fetch the latest history to try to get the ID
-          const getHistoryResponse = await fetch(getApiUrl('tariff/history'), {
+          const getHistoryResponse = await fetch('http://localhost:8080/api/tariff/history', {
             method: 'GET',
             headers: {
               'Authorization': token ? `Bearer ${token}` : '',

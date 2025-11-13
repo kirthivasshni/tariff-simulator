@@ -7,7 +7,6 @@ import { TariffChart } from "@/components/tariff-chart"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 import supabase from "@/lib/supabaseClient"
-import { getApiUrl } from "@/lib/apiConfig"
 
 export interface TariffDataPoint {
   date: string
@@ -33,6 +32,7 @@ export interface FilterSelection {
   }
 }
 
+const API_BASE_URL = "http://localhost:8080/api"
 const MAX_LINES = 10
 
 export function TariffTrendsVisualization() {
@@ -106,7 +106,7 @@ export function TariffTrendsVisualization() {
       products: filters.products.join(',')
     })
 
-    const response = await fetch(`${getApiUrl("tariff-trends")}?${params}`, {
+    const response = await fetch(`${API_BASE_URL}/tariff-trends?${params}`, {
       method: 'GET',
       headers: createAuthHeaders(token),
       credentials: 'include'
