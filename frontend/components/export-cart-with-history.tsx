@@ -17,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { getApiUrl } from "@/lib/apiConfig"
 
 interface CartItem {
   id: string
@@ -66,7 +67,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
       
-      const response = await fetch('http://localhost:8080/api/export-cart', {
+      const response = await fetch(getApiUrl('export-cart'), {
         method: 'GET',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
@@ -101,7 +102,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
       
-      const response = await fetch('http://localhost:8080/api/tariff/history', {
+      const response = await fetch(getApiUrl('tariff/history'), {
         method: 'GET',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
@@ -198,7 +199,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
 
       for (const id of selectedCartItems) {
         try {
-          const response = await fetch(`http://localhost:8080/api/export-cart/remove/${id}`, {
+          const response = await fetch(getApiUrl(`export-cart/remove/${id}`), {
             method: 'DELETE',
             headers: {
               'Authorization': token ? `Bearer ${token}` : '',
@@ -243,7 +244,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
       
-      const response = await fetch('http://localhost:8080/api/export-cart/clear', {
+      const response = await fetch(getApiUrl('export-cart/clear'), {
         method: 'DELETE',
         headers: {
           'Authorization': token ? `Bearer ${token}` : '',
@@ -287,7 +288,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
 
       for (const id of selectedHistoryItems) {
         try {
-          const response = await fetch(`http://localhost:8080/api/export-cart/add/${id}`, {
+          const response = await fetch(getApiUrl(`export-cart/add/${id}`), {
             method: 'POST',
             headers: {
               'Authorization': token ? `Bearer ${token}` : '',
@@ -335,7 +336,7 @@ export function ExportCartWithHistory({ onCartCountChange }: ExportCartWithHisto
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
 
-      const response = await fetch('http://localhost:8080/api/export-cart/export', {
+      const response = await fetch(getApiUrl('export-cart/export'), {
         method: 'GET',
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MultiSelect } from "@/components/multi-select"
 import supabase from "@/lib/supabaseClient"
+import { API_BASE_URL, getApiUrl } from "@/lib/apiConfig"
 import {
   ResponsiveContainer,
   BarChart,
@@ -71,7 +72,6 @@ interface ComparisonFormData {
   currency: string
 }
 
-const API_BASE_URL = "http://localhost:8080/api"
 const INITIAL_FORM_DATA: ComparisonFormData = {
   product: "",
   exportingFrom: "",
@@ -114,8 +114,8 @@ export function TariffComparisonPanel() {
       const token = await getAuthToken()
       const headers = createAuthHeaders(token)
       const [productsResponse, countriesResponse] = await Promise.all([
-        fetch(`${API_BASE_URL}/products`, { headers, credentials: "include" }),
-        fetch(`${API_BASE_URL}/countries`, { headers, credentials: "include" }),
+        fetch(getApiUrl("products"), { headers, credentials: "include" }),
+        fetch(getApiUrl("countries"), { headers, credentials: "include" }),
       ])
 
       const productsData = await productsResponse.json()
@@ -135,7 +135,7 @@ export function TariffComparisonPanel() {
   const loadCurrencies = async () => {
     try {
       const token = await getAuthToken()
-      const response = await fetch(`${API_BASE_URL}/tariffs/currencies`, {
+      const response = await fetch(getApiUrl("tariffs/currencies"), {
         headers: createAuthHeaders(token),
         credentials: "include",
       })
@@ -223,7 +223,7 @@ export function TariffComparisonPanel() {
         currency: formData.currency,
       }
 
-      const response = await fetch(`${API_BASE_URL}/tariffs/compare`, {
+      const response = await fetch(getApiUrl("tariffs/compare"), {
         method: "POST",
         headers: createAuthHeaders(token),
         credentials: "include",

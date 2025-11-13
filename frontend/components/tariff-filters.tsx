@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { MultiSelect } from "@/components/multi-select"
 import { DateRangePicker } from "@/components/date-range-picker"
 import supabase from "@/lib/supabaseClient"
+import { getApiUrl } from "@/lib/apiConfig"
 import type { FilterSelection } from "@/components/tariff-trends-visualization"
 
 interface TariffFiltersProps {
@@ -14,8 +15,6 @@ interface TariffFiltersProps {
   maxLines: number
   currentLines: number
 }
-
-const API_BASE_URL = "http://localhost:8080/api"
 
 export function TariffFilters({ filters, onFilterChange, maxLines, currentLines }: TariffFiltersProps) {
   const [localFilters, setLocalFilters] = useState<FilterSelection>(filters)
@@ -37,7 +36,7 @@ export function TariffFilters({ filters, onFilterChange, maxLines, currentLines 
   const fetchCountries = async (): Promise<string[]> => {
     try {
       const token = await getAuthToken()
-      const response = await fetch(`${API_BASE_URL}/countries`, {
+      const response = await fetch(getApiUrl("countries"), {
         headers: createAuthHeaders(token),
         credentials: 'include'
       })
@@ -58,7 +57,7 @@ export function TariffFilters({ filters, onFilterChange, maxLines, currentLines 
   const fetchProducts = async (): Promise<string[]> => {
     try {
       const token = await getAuthToken()
-      const response = await fetch(`${API_BASE_URL}/products`, {
+      const response = await fetch(getApiUrl("products"), {
         headers: createAuthHeaders(token),
         credentials: 'include'
       })
